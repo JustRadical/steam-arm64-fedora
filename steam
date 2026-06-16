@@ -139,4 +139,9 @@ install_bundled_proton_files
 echo ""
 log_info "Starting Steam with arguments $@"
 LD_LIBRARY_PATH=${HOME}/.local/share/Steam/lib/aarch64-linux-gnu/:${LD_LIBRARY_PATH} $HOME/.local/share/Steam/steamrtarm64/steam "$@"
+EXITCODE=$?
 
+if [ $EXITCODE -eq 42 ] ; then
+	log_info "Restarting Steam"
+	exec "$0" "$@"
+fi
