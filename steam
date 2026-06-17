@@ -37,23 +37,23 @@ symlink_libraries() {
   mkdir -p "${STEAM}/lib/aarch64-linux-gnu"
 
   local target
+  local symlink
+
   target=$(echo "${STEAM}"/steam-runtime-steamrt-arm64/steamrt3c_platform_*/files/lib/aarch64-linux-gnu/libibus-1.0.so.5.* | head -n 1)
   symlink="${STEAM}/lib/aarch64-linux-gnu/libibus-1.0.so.5"
   if [ ! -f "$target" ]; then
-      die "Could not locate libibus target inside runtime."
+    die "Could not locate libibus target inside runtime."
   fi
 
   if [[ ! -L "$symlink" ]] || [[ ! -e "$symlink" ]]; then
     ln -sf "${target}" "${symlink}" || die "Failed to symlink libibus."
-    loginfo "libibus-1.0.so.5 created/updated"
+    log_info "libibus-1.0.so.5 created/updated"
   fi
 
-  local target
-  local symlink
   target=$(echo "${STEAM}"/steam-runtime-steamrt-arm64/steamrt3c_platform_*/files/lib/aarch64-linux-gnu/libgtk-x11-2.0.so.0.* | head -n 1)
   symlink="${STEAM}/lib/aarch64-linux-gnu/libgtk-x11-2.0.so.0"
   if [ ! -f "$target" ]; then
-      die "Could not locate libibus target inside runtime."
+    die "Could not locate libgtk target inside runtime."
   fi
 
   if [[ ! -L "$symlink" ]] || [[ ! -e "$symlink" ]]; then
@@ -61,12 +61,10 @@ symlink_libraries() {
     log_info "libgtk-x11-2.0.so.0 symlink created"
   fi
 
-  local target
-  local symlink
   target=$(echo "${STEAM}"/steam-runtime-steamrt-arm64/steamrt3c_platform_*/files/lib/aarch64-linux-gnu/libgdk-x11-2.0.so.0.* | head -n 1)
   symlink="${STEAM}/lib/aarch64-linux-gnu/libgdk-x11-2.0.so.0"
   if [ ! -f "$target" ]; then
-      die "Could not locate libibus target inside runtime."
+    die "Could not locate libgdk target inside runtime."
   fi
 
   if [[ ! -L "$symlink" ]] || [[ ! -e "$symlink" ]]; then
@@ -74,17 +72,15 @@ symlink_libraries() {
     log_info "libgdk-x11-2.0.so.0 symlink created"
   fi
 
-  local target
-  local symlink
   target="$(find /usr/lib64 -maxdepth 1 -name 'libvpx.so.*' -type f | head -1)"
   symlink="${STEAM}/lib/aarch64-linux-gnu/libvpx.so.6"
   if [ ! -f "$target" ]; then
-      die "Could not locate libibus target inside runtime."
+    die "Could not locate libvpx target in /usr/lib64."
   fi
 
   if [[ ! -L "${symlink}" ]] || [[ ! -e "${symlink}" ]]; then
     ln -sf "${target}" "${symlink}" || die "Failed to symlink libvpx."
-    log_info "libgdk-x11-2.0.so.0 symlink created"
+    log_info "libvpx.so.6 symlink created"
   fi
 }
 
@@ -141,7 +137,7 @@ log_info "Starting Steam with arguments $@"
 LD_LIBRARY_PATH=${HOME}/.local/share/Steam/lib/aarch64-linux-gnu/:${LD_LIBRARY_PATH} $HOME/.local/share/Steam/steamrtarm64/steam "$@"
 EXITCODE=$?
 
-if [ $EXITCODE -eq 42 ] ; then
+if [ $EXITCODE -eq 42 ]; then
 	log_info "Restarting Steam"
 	exec "$0" "$@"
 fi
