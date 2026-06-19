@@ -72,7 +72,7 @@ symlink_libraries() {
     log_info "libgdk-x11-2.0.so.0 symlink created"
   fi
 
-  target="$(find /usr/lib64 -maxdepth 1 -name 'libvpx.so.*' -type f | head -1)"
+  target=$(realpath "$(/usr/sbin/ldconfig -p | grep -E 'libvpx.*AArch64' | awk -F' => ' '{print $2}' | sort -V | head -n 1)")
   symlink="${STEAM}/lib/aarch64-linux-gnu/libvpx.so.6"
   if [ ! -f "$target" ]; then
     die "Could not locate libvpx target in /usr/lib64."
