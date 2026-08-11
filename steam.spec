@@ -3,8 +3,8 @@
 %global appid com.valvesoftware.Steam
 
 Name:           steam
-Version:        1.0.0.85
-Release:        11%{?dist}
+Version:        1.0.0.87
+Release:        1%{?dist}
 Summary:        Installer for the Steam software distribution service
 # Redistribution and repackaging for Linux is allowed, see license file. udev rules are MIT.
 License:        Steam License Agreement and MIT
@@ -30,11 +30,6 @@ Source7:       steamrestart.sh
 
 # Executable
 Source8:       steam
-
-# files for proton
-Source9:       compatibilitytool.vdf
-Source10:      registry.vdf
-Source11:      toolmanifest.vdf
 
 # Do not install desktop file in lib/steam, do not install apt sources
 Patch0:         steam-makefile.patch
@@ -171,9 +166,6 @@ install -m 644 -p %{SOURCE6} %{buildroot}%{_prefix}/lib/systemd/system.conf.d/
 install -m 644 -p %{SOURCE6} %{buildroot}%{_prefix}/lib/systemd/user.conf.d/
 install -m 775 -p %{SOURCE7} %{buildroot}%{_bindir}/steamrestart
 install -m 775 -p %{SOURCE8} %{buildroot}%{_bindir}/
-install -m 644 -p %{SOURCE9} %{buildroot}%{_datadir}/steam/
-install -m 644 -p %{SOURCE10} %{buildroot}%{_datadir}/steam/
-install -m 644 -p %{SOURCE11} %{buildroot}%{_datadir}/steam/
 
 # https://github.com/ValveSoftware/steam-for-linux/issues/9940
 desktop-file-edit --remove-key=PrefersNonDefaultGPU %{buildroot}%{_datadir}/applications/%{name}.desktop
@@ -192,7 +184,6 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/%{appid}.metai
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/pixmaps/%{name}_tray_mono.png
-%{_datadir}/steam/*.vdf
 %{_prefix}/lib/%{name}/
 %{_mandir}/man6/%{name}.*
 %{_metainfodir}/%{appid}.metainfo.xml

@@ -8,8 +8,6 @@ STEAM="${HOME}/.local/share/Steam"
 STEAM_DOT="${HOME}/.steam"
 RUNTIME_DIR="${STEAM}/steam-runtime-steamrt-arm64"
 CLIENT_DIR="${STEAM}/steamrtarm64"
-PROTON_NAME="Proton 11.0 (ARM64)"
-PROTON_DIR="${STEAM}/steamapps/common/${PROTON_NAME}"
 RUNTIME_TAR_URL="https://repo.steampowered.com/steamrt3c/images/latest-public-beta/steam-runtime-steamrt-arm64.tar.xz"
 STEAM_MANIFEST_URL="https://client-update.fastly.steamstatic.com/steam_client_publicbeta_linuxarm64"
 STEAM_CDN="https://client-update.steamstatic.com"
@@ -109,19 +107,6 @@ install_steam_client_arm64() {
   ln -sfn "${STEAM}/linuxarm64" "${STEAM_DOT}/sdkarm64" || die "Failed to symlink ${STEAM_DOT}/sdkarm64."
 
   mkdir -p "${STEAM}/compatibilitytools.d/"
-  if [ -d "${STEAM}/compatibilitytools.d/Proton11ARM" ]; then
-    log_info "Proton already symlinked. Skipping."
-  else
-    ln -sfn "${PROTON_DIR}/" "${STEAM}/compatibilitytools.d/Proton11ARM" || die "Failed to symlink Proton11ARM."
-  fi
-  cp -f "/usr/share/steam/compatibilitytool.vdf" "${STEAM}/compatibilitytools.d/" || die "Failed to copy compatibilitytool.vdf."
-}
-
-install_bundled_proton_files() {
-  log_info "Installing bundled Proton files..."
-  mkdir -p "${STEAM_DOT}" "${PROTON_DIR}/"
-  cp -f "/usr/share/steam/toolmanifest.vdf" "${PROTON_DIR}/" || die "Failed to copy toolmanifest.vdf."
-  cp -f "/usr/share/steam/registry.vdf" "${STEAM_DOT}" || die "Failed to copy registry.vdf."
 }
 
 # --- Execution ---
@@ -130,7 +115,6 @@ log_info "Starting Steam Installation Process..."
 install_steam_runtime_arm64
 symlink_libraries
 install_steam_client_arm64
-install_bundled_proton_files
 
 echo ""
 log_info "Starting Steam with arguments $@"
